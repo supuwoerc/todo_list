@@ -23,4 +23,5 @@ func InitDatabase(info string) {
 	db.DB().SetConnMaxLifetime(30 * time.Second) //设置连接最大生存时间
 	DB = db
 	fmt.Println("数据库连接后成功！")
+	migration()
 }
