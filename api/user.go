@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"todo_list/pkg/e"
 	"todo_list/serializer"
 	"todo_list/service"
 )
@@ -14,9 +15,9 @@ func UserRegister(c *gin.Context) {
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusOK, serializer.Response{
-			Status:  http.StatusBadRequest,
+			Status:  e.InvalidParams,
 			Data:    nil,
-			Message: "结构体不合法",
+			Message: e.GetMessage(e.InvalidParams),
 			Error:   err.Error(),
 		})
 	}
@@ -29,9 +30,9 @@ func UserLogin(c *gin.Context) {
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusOK, serializer.Response{
-			Status:  http.StatusBadRequest,
+			Status:  e.InvalidParams,
 			Data:    nil,
-			Message: "结构体不合法",
+			Message: e.GetMessage(e.InvalidParams),
 			Error:   err.Error(),
 		})
 	}

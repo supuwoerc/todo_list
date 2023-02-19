@@ -5,6 +5,7 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"todo_list/api"
+	"todo_list/middleware"
 )
 
 func NewRouter() *gin.Engine {
@@ -15,6 +16,11 @@ func NewRouter() *gin.Engine {
 	{
 		v1Group.POST("user/register", api.UserRegister)
 		v1Group.POST("user/login", api.UserLogin)
+		v1AuthGroup := v1Group.Group("/") //需要鉴权的路由
+		v1AuthGroup.Use(middleware.JWTAuth())
+		{
+			v1AuthGroup.POST("task", api.TaskCreate)
+		}
 	}
 	return engine
 }

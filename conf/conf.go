@@ -10,6 +10,7 @@ import (
 var (
 	AppMode  string
 	HttpPort string
+	TokenKey string
 
 	RedisAddr   string
 	RedisPw     string
@@ -35,6 +36,7 @@ func loadConfigFile() *ini.File {
 func loadServe(file *ini.File) {
 	AppMode = file.Section("service").Key("AppMode").Value()
 	HttpPort = file.Section("service").Key("HttpPort").Value()
+	TokenKey = file.Section("service").Key("TokenKey").Value()
 }
 
 // 读取redis配置
