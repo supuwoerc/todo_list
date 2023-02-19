@@ -33,8 +33,8 @@ func loadConfigFile() *ini.File {
 
 // 读取项目配置
 func loadServe(file *ini.File) {
-	AppMode = file.Section("serve").Key("AppMode").Value()
-	HttpPort = file.Section("serve").Key("HttpPort").Value()
+	AppMode = file.Section("service").Key("AppMode").Value()
+	HttpPort = file.Section("service").Key("HttpPort").Value()
 }
 
 // 读取redis配置
