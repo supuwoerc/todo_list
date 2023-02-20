@@ -15,4 +15,5 @@ const (
 	ErrorAuthToken             = 30003
 	ErrorAuth                  = 30004
 	ErrorDatabase              = 40001
+	ErrorTaskNotFound          = 50000
 )

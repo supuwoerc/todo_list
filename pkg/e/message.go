@@ -14,6 +14,7 @@ var codeMessageMapping = map[int]string{
 	ErrorAuth:                  "Token错误",
 	ErrorNotCompare:            "密码不匹配",
 	ErrorDatabase:              "数据库操作出错,请重试",
+	ErrorTaskNotFound:          "未查询到数据",
 }
 
 func GetMessage(code int) string {

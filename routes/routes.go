@@ -20,6 +20,7 @@ func NewRouter() *gin.Engine {
 		v1AuthGroup.Use(middleware.JWTAuth())
 		{
 			v1AuthGroup.POST("task", api.TaskCreate)
+			v1AuthGroup.GET("task/:tid", api.TaskDetail)
 		}
 	}
 	return engine

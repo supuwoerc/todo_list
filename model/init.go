@@ -10,6 +10,7 @@ import (
 
 var DB *gorm.DB
 
+// InitDatabase 为什么不需要手动的关闭数据库连接：https://github.com/go-gorm/gorm/issues/3834
 func InitDatabase(info string) {
 	db, err := gorm.Open("mysql", info)
 	if err != nil {
