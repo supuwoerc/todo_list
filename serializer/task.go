@@ -24,3 +24,15 @@ func BuildTaskDetail(task model.Task) TaskDetailResponse {
 		EndTime:   task.EndTime,
 	}
 }
+
+// BuildTasks 将tasks数据序列化
+func BuildTasks(tasks []model.Task, total uint) DataList[TaskDetailResponse] {
+	var list []TaskDetailResponse
+	for _, v := range tasks {
+		list = append(list, BuildTaskDetail(v))
+	}
+	return DataList[TaskDetailResponse]{
+		List:  list,
+		Total: total,
+	}
+}

@@ -15,6 +15,10 @@ type TaskDTO struct {
 type TaskDetailDTO struct {
 	ID uint `uri:"tid" binding:"required"`
 }
+type TasksDTO struct {
+	PageSize int `form:"page_size"`
+	Page     int `form:"page"`
+}
 
 // TaskCreate 创建一个task
 func (taskDTO *TaskDTO) TaskCreate(uid uint) serializer.Response {
@@ -69,6 +73,27 @@ func (taskDetailDTO *TaskDetailDTO) TaskDetail(uid uint) serializer.Response {
 	return serializer.Response{
 		Status:  e.SUCCESS,
 		Data:    serializer.BuildTaskDetail(task),
+		Message: e.GetMessage(e.SUCCESS),
+		Error:   "",
+	}
+}
+
+// TaskList 查询分页Task
+func (tasksDTO *TasksDTO) TaskList(uid uint) serializer.Response {
+	var total uint
+	var tasks []model.Task
+	if tasksDTO.Page <= 0 {
+		tasksDTO.Page = 1
+	}
+	if tasksDTO.PageSize <= 0 {
+		tasksDTO.PageSize = 10
+	}
+	model.DB.Model(model.Task{}).Preload("User").Where("uid = ?", uid).Count(&total).
+		Limit(tasksDTO.PageSize).Offset((tasksDTO.Page - 1) * tasksDTO.PageSize).
+		Find(&tasks)
+	return serializer.Response{
+		Status:  e.SUCCESS,
+		Data:    serializer.BuildTasks(tasks, total),
 		Message: e.GetMessage(e.SUCCESS),
 		Error:   "",
 	}
