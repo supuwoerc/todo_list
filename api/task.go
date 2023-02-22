@@ -58,3 +58,18 @@ func TaskList(c *gin.Context) {
 		})
 	}
 }
+func TaskUpdate(c *gin.Context) {
+	var taskUpdateDTO service.TaskUpdateDTO
+	claims, _ := utils.ParseToken(c.GetHeader(conf.TokenKey))
+	if err := c.ShouldBind(&taskUpdateDTO); err == nil {
+		res := taskUpdateDTO.TaskUpdate(claims.ID)
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusOK, serializer.Response{
+			Status:  e.InvalidParams,
+			Data:    nil,
+			Message: e.GetMessage(e.InvalidParams),
+			Error:   err.Error(),
+		})
+	}
+}
