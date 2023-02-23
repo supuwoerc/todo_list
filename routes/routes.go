@@ -23,6 +23,7 @@ func NewRouter() *gin.Engine {
 			v1AuthGroup.GET("task/:tid", api.TaskDetail)
 			v1AuthGroup.GET("tasks", api.TaskList)
 			v1AuthGroup.PUT("task", api.TaskUpdate)
+			v1AuthGroup.DELETE("task/:tid", api.TaskDelete)
 		}
 	}
 	return engine

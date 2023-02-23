@@ -24,6 +24,9 @@ type TaskUpdateDTO struct {
 	Title   string `json:"title" form:"title" binding:"required,min=1,max=10"`
 	Content string `json:"content" form:"content" binding:"required,min=1"`
 }
+type TaskDeleteDTO struct {
+	ID uint `uri:"tid" binding:"required"`
+}
 
 // TaskCreate 创建一个task
 func (taskDTO *TaskDTO) TaskCreate(uid uint) serializer.Response {
@@ -152,6 +155,41 @@ func (taskUpdateDTO *TaskUpdateDTO) TaskUpdate(uid uint) serializer.Response {
 	return serializer.Response{
 		Status:  e.SUCCESS,
 		Data:    nil,
+		Message: e.GetMessage(e.SUCCESS),
+		Error:   "",
+	}
+}
+
+func (taskDeleteDTO *TaskDeleteDTO) TaskDelete(uid uint) serializer.Response {
+	var task model.Task
+	if err := model.DB.Model(&task).Where("id = ? and uid = ?", taskDeleteDTO.ID, uid).Find(&task).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return serializer.Response{
+				Status:  e.ErrorTaskNotFound,
+				Data:    nil,
+				Message: e.GetMessage(e.ErrorTaskNotFound),
+				Error:   err.Error(),
+			}
+		} else {
+			return serializer.Response{
+				Status:  e.ErrorDatabase,
+				Data:    nil,
+				Message: e.GetMessage(e.ErrorDatabase),
+				Error:   err.Error(),
+			}
+		}
+	}
+	if err := model.DB.Delete(&task).Error; err != nil {
+		return serializer.Response{
+			Status:  e.ErrorDatabase,
+			Data:    nil,
+			Message: e.GetMessage(e.ErrorDatabase),
+			Error:   err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status:  e.SUCCESS,
+		Data:    true,
 		Message: e.GetMessage(e.SUCCESS),
 		Error:   "",
 	}

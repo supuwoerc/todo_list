@@ -73,3 +73,18 @@ func TaskUpdate(c *gin.Context) {
 		})
 	}
 }
+func TaskDelete(c *gin.Context) {
+	var taskDeleteDTO service.TaskDeleteDTO
+	claims, _ := utils.ParseToken(c.GetHeader(conf.TokenKey))
+	if err := c.ShouldBindUri(&taskDeleteDTO); err == nil {
+		res := taskDeleteDTO.TaskDelete(claims.ID)
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusOK, serializer.Response{
+			Status:  e.InvalidParams,
+			Data:    nil,
+			Message: e.GetMessage(e.InvalidParams),
+			Error:   err.Error(),
+		})
+	}
+}
