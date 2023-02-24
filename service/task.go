@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/jinzhu/gorm"
+	"strings"
 	"time"
 	"todo_list/model"
 	"todo_list/pkg/e"
@@ -16,8 +17,9 @@ type TaskDetailDTO struct {
 	ID uint `uri:"tid" binding:"required"`
 }
 type TasksDTO struct {
-	PageSize int `form:"page_size"`
-	Page     int `form:"page"`
+	PageSize int    `form:"page_size"`
+	Page     int    `form:"page"`
+	Keyword  string `form:"keyword"`
 }
 type TaskUpdateDTO struct {
 	ID      uint   `json:"id" form:"id" binding:"required"`
@@ -96,7 +98,8 @@ func (tasksDTO *TasksDTO) TaskList(uid uint) serializer.Response {
 	if tasksDTO.PageSize <= 0 {
 		tasksDTO.PageSize = 10
 	}
-	err := model.DB.Model(model.Task{}).Preload("User").Where("uid = ?", uid).Count(&total).
+	keyword := strings.Join([]string{"%", tasksDTO.Keyword, "%"}, "")
+	err := model.DB.Model(model.Task{}).Preload("User").Where("uid = ? and (title like ? or content like ?)", uid, keyword, keyword).Count(&total).
 		Limit(tasksDTO.PageSize).Offset((tasksDTO.Page - 1) * tasksDTO.PageSize).
 		Find(&tasks).Error
 	if err != nil && gorm.IsRecordNotFoundError(err) {

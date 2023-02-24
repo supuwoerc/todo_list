@@ -27,7 +27,7 @@ func BuildTaskDetail(task model.Task) TaskDetailResponse {
 
 // BuildTasks 将tasks数据序列化
 func BuildTasks(tasks []model.Task, total uint) DataList[TaskDetailResponse] {
-	var list []TaskDetailResponse
+	var list = make([]TaskDetailResponse, 0) //make方式创建，防止前端获取到nil
 	for _, v := range tasks {
 		list = append(list, BuildTaskDetail(v))
 	}
